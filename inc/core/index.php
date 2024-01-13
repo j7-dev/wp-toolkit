@@ -21,6 +21,8 @@ class Core
 	 * @var array
 	 */
 	protected $_fields;
+	protected $_field_types;
+
 
 	function __construct($config)
 	{
@@ -37,11 +39,37 @@ class Core
 
 	public function scripts(): void
 	{
-		\wp_enqueue_media();
 
-		if (Utils::is_in_screens($this->_config['screen'])) {
-			\wp_enqueue_style('wp-metabox-style', Utils::get_plugin_url() . '/assets/style.css', array(), Utils::get_plugin_ver(), null);
-			\wp_enqueue_script('wp-metabox-script', Utils::get_plugin_url() . '/assets/script.js', array('jquery'), array(), Utils::get_plugin_ver(), true);
+		if (!Utils::is_in_screens($this->_config['screen'])) {
+			return;
+		}
+
+		$wp_version = get_bloginfo('version');
+		if (version_compare($wp_version, '6.3', '>')) {
+			$args = [
+				'strategy' => 'async', // 'defer' or 'async'
+			];
+		} else {
+			$args = [];
+		}
+
+
+		\wp_enqueue_style(Utils::KEBAB . '-style', Utils::get_plugin_url() . '/assets/style.css', array(), Utils::get_plugin_ver(), null);
+
+		\wp_enqueue_script('jquery');
+
+		// \wp_enqueue_script(Utils::KEBAB . '-script', Utils::get_plugin_url() . '/assets/script.js', array('jquery'), Utils::get_plugin_ver(), $args);
+
+		\wp_enqueue_script(Utils::KEBAB . '-script', Utils::get_plugin_url() . '/assets/script.js', array('jquery'), Utils::get_plugin_ver(), $args);
+
+		if (in_array('media', $this->get_field_types()) || in_array('file', $this->get_field_types())) {
+			\wp_enqueue_media();
+		}
+
+		// Load Color Picker if required
+		if (in_array('color', $this->get_field_types())) {
+			\wp_enqueue_style('wp-color-picker');
+			\wp_enqueue_script('wp-color-picker');
 		}
 	}
 
@@ -53,30 +81,6 @@ class Core
 			((!isset($_POST[$this->_nonce_name]))) || // verify nonce (same with below)
 			(!\wp_verify_nonce($_POST[$this->_nonce_name], $this->_nonce_action)));
 	}
-
-	/**
-	 * An aggregate function that renders tye contents of the metabox
-	 * by calling the appropriate, individual function for each
-	 * field type.
-	 *
-	 * @return void
-	 */
-	public function render($post_or_order_object): void
-	{
-		global $post;
-
-		$order = ($post_or_order_object instanceof \WP_Post) ? wc_get_order($post_or_order_object->ID) : $post_or_order_object;
-
-
-		wp_nonce_field($this->_nonce_action, $this->_nonce_name);
-		echo sprintf('<div class="%s">', Utils::KEBAB);
-		foreach ($this->_fields as $field) {
-			$meta = ($order) ? $order->get_meta($field['id']) : get_post_meta($post->ID, $field['id'], true);
-			call_user_func(array('J7\WpToolkit\Components\Form', 'render_field_' . $field['type']), $field, $meta);
-		}
-		echo '</div>';
-	}
-
 
 	public function addField(array $field, bool $repeatable = false)
 	{
@@ -149,5 +153,20 @@ class Core
 		);
 
 		$this->_fields[] = $field;
+	}
+
+	/*
+	 * @return array configured field types
+	 */
+	public function get_field_types()
+	{
+
+		foreach ($this->_fields as $field) {
+			if (isset($field['type'])) {
+				$this->_field_types[] = \sanitize_key($field['type']);
+			}
+		}
+
+		return array_unique($this->_field_types);
 	}
 }

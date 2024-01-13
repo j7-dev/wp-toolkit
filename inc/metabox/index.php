@@ -86,4 +86,28 @@ class Metabox extends Core
 			}
 		}
 	}
+
+	/**
+	 * An aggregate function that renders tye contents of the metabox
+	 * by calling the appropriate, individual function for each
+	 * field type.
+	 *
+	 * @return void
+	 */
+	public function render($post_or_order_object): void
+	{
+		global $post;
+
+		$order = ($post_or_order_object instanceof \WP_Post) ? wc_get_order($post_or_order_object->ID) : $post_or_order_object;
+
+
+		wp_nonce_field($this->_nonce_action, $this->_nonce_name);
+		echo sprintf('<div class="%s">', Utils::KEBAB);
+		foreach ($this->_fields as $field) {
+			$field['value'] = ($order) ? $order->get_meta($field['id']) : \get_post_meta($post->ID, $field['id'], true);
+
+			\call_user_func(['J7\WpToolkit\Components\Form', 'render_field_' . $field['type']], $field);
+		}
+		echo '</div>';
+	}
 }
