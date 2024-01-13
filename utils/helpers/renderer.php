@@ -88,7 +88,7 @@ abstract class Renderer
 	 * @param array         $field
 	 * @param string | null $meta
 	 */
-	public static function render_before_field($field = null, $meta = null): void
+	public static function render_before_field($field = null): void
 	{
 		echo sprintf(
 			'<div class="%s %s">',
@@ -109,7 +109,7 @@ abstract class Renderer
 			self::render_field_description($field['desc']);
 		}
 		if ($field['type'] == 'image') {
-			self::render_image_preview($field, $meta);
+			self::render_image_preview($field);
 		}
 	}
 
@@ -147,15 +147,13 @@ abstract class Renderer
 	 * @param array  $field
 	 * @param string $src
 	 */
-	public static function render_image_preview($field, string $src): void
+	public static function render_image_preview($field): void
 	{
-		global $post;
-
 		echo sprintf(
-			'<img id="%s" class="%s" src="%s" alt="%s">',
+			'<img id="%1$s" class="%2$s" src="%3$s" alt="%4$s">',
 			\esc_attr(sprintf('js-%s-image-preview', $field['id'])),
-			\esc_attr(sprintf('%s %s', self::get_block_element_class_with_namespace('image-preview', false), empty($src) ? 'is-hidden' : '')),
-			\esc_attr($src),
+			\esc_attr(sprintf('%s %s', self::get_block_element_class_with_namespace('image-preview', false), empty($field['value']) ? 'is-hidden' : '')),
+			\esc_attr($field['value']),
 			\esc_attr('')
 		);
 	}
