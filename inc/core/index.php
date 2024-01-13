@@ -6,6 +6,7 @@ namespace J7\WpToolkit;
 
 use J7\WpToolkit\Utils;
 
+
 class Core
 {
 	protected static $_instance;
@@ -71,7 +72,7 @@ class Core
 		echo sprintf('<div class="%s">', Utils::KEBAB);
 		foreach ($this->_fields as $field) {
 			$meta = ($order) ? $order->get_meta($field['id']) : get_post_meta($post->ID, $field['id'], true);
-			call_user_func(array($this, 'render_field_' . $field['type']), $field, $meta);
+			call_user_func(array('J7\WpToolkit\Components\Form', 'render_field_' . $field['type']), $field, $meta);
 		}
 		echo '</div>';
 	}
