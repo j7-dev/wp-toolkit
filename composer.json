@@ -4,7 +4,7 @@
   },
   "autoload": {
     "psr-4": {
-      "J7\\MyPlugin\\": "utils/"
+      "J7\\WpToolkit\\": "utils/"
     }
   }
 }

@@ -2,15 +2,25 @@
 
 declare(strict_types=1);
 
-namespace J7\MyPlugin;
+namespace J7\WpToolkit;
 
 abstract class Utils
 {
-	const APP_NAME            = 'My Plugin';
-	const KEBAB               = 'my-plugin';
-	const SNAKE               = 'my_plugin';
+	const APP_NAME            = 'WP Toolkit';
+	const KEBAB               = 'wp-toolkit';
+	const SNAKE               = 'wp_toolkit';
 	const DEFAULT_IMAGE       = 'http://1.gravatar.com/avatar/1c39955b5fe5ae1bf51a77642f052848?s=96&d=mm&r=g';
-	const GITHUB_REPO         = 'https://github.com/j7-dev/wp-plugin';
+	const GITHUB_REPO         = 'https://github.com/j7-dev/wp-toolkit';
+
+	/**
+	 * check if is in admin page to load script
+	 */
+	public static function is_in_screens($screens): bool
+	{
+		global $typenow;
+		return (is_array($screens) && in_array($typenow, $screens)) ||
+			(is_string($screens) && $typenow === $screens);
+	}
 
 	public static function get_plugin_dir(): string
 	{
