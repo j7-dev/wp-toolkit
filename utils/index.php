@@ -25,6 +25,14 @@ abstract class Utils
 			(is_string($screens) && $typenow === $screens);
 	}
 
+	public static function debug_log($log_line): void
+	{
+		$default_path = ABSPATH . 'wp-content';
+		$default_file_name 	= 'debug.log';
+
+		$log_in_file = file_put_contents("{$default_path}/{$default_file_name}", date('Y-m-d H:i:s') . ' - ⭐ ' . $log_line . PHP_EOL, FILE_APPEND);
+	}
+
 	public static function get_plugin_dir(): string
 	{
 		$plugin_dir = \untrailingslashit(\wp_normalize_path(\plugin_dir_path(__DIR__ . '../')));
