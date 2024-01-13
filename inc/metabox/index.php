@@ -1,11 +1,8 @@
 <?php
 
-
+declare(strict_types=1);
 
 namespace J7\WpToolkit;
-
-use J7\WpToolkit\Utils;
-use J7\WpToolkit\Utils\Renderer;
 
 class Metabox extends Core
 {
