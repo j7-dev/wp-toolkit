@@ -12,76 +12,80 @@ class Form
 	const REPEATER_INDEX_PLACEHOLDER       = 'CurrentCounter';
 	const REPEATER_ITEM_NUMBER_PLACEHOLDER = 'ItemNumber';
 
-	public static function render_field_text($field, $meta)
+
+
+	public static function render_field_text($field)
 	{
+
 		Renderer::render_before_field($field);
 		echo sprintf(
-			'<input type="text" class="%1$s" id="%2$s" name="%2$s" value="%3$s">',
-			esc_attr(Renderer::get_block_element_class_with_namespace($field['type'])),
+			'<input type="text" class="%1$s" id="%2$s" name="%2$s" value="%3$s" placeholder="%4$s">',
+			esc_attr($field['size'] . '-text ' . $field['class'] . ' ' . Renderer::get_block_element_class_with_namespace($field['type'])),
 			esc_attr($field['id']),
-			esc_attr($meta)
+			esc_attr($field['value']),
+			esc_attr($field['placeholder'])
 		);
 		Renderer::render_after_field();
 	}
 
 
-	public static function render_field_textarea($field, $meta)
+	public static function render_field_textarea($field)
 	{
 		Renderer::render_before_field($field);
 		echo sprintf(
 			'<textarea class="%1$s" id="%2$s" name="%2$s">%3$s</textarea>',
 			esc_attr(Renderer::get_block_element_class_with_namespace($field['type'])),
 			esc_attr($field['id']),
-			esc_html($meta)
+			esc_html($field['value'])
 		);
 		Renderer::render_after_field();
 	}
 
-	public static function render_field_checkbox($field, $meta)
+	public static function render_field_checkbox($field)
 	{
 		Renderer::render_before_field($field);
 		echo sprintf(
 			'<input type="checkbox" class="%1$s" id="%2$s" name="%2$s" %3$s>',
 			esc_attr(Renderer::get_block_element_class_with_namespace($field['type'])),
 			esc_attr($field['id']),
-			checked(!empty($meta), true, false)
+			checked(!empty($field['value']), true, false)
 		);
 		Renderer::render_after_field($field); // pass in $field to render desc below input
 	}
 
-	public static function render_field_html($field, $meta)
+	public static function render_field_html($field)
 	{
 		Renderer::render_before_field($field);
 		echo $field['html'];
 		Renderer::render_after_field();
 	}
 
-	public static function render_field_image($field, $meta)
+	public static function render_field_image($field)
 	{
-		Renderer::render_before_field($field, $meta); // pass in $meta for preview image
+		Renderer::render_before_field($field); // pass in $meta for preview image
 		echo sprintf(
 			'<input type="hidden" id="%s" name="%s" value="%s">',
 			esc_attr('image-' . $field['id']),
 			esc_attr($field['id']),
-			(isset($meta) ? $meta : '')
+			(isset($field['value']) ? $field['value'] : '')
 		);
 		echo sprintf(
 			'<a class="%s button" data-hidden-input="%s">%s</a>',
 			esc_attr(sprintf('js-%s-image-upload-button', Utils::KEBAB)),
 			esc_attr($field['id']),
-			esc_html(sprintf('%s Image', empty($meta) ? 'Upload' : 'Change'))
+			esc_html(sprintf('%s Image', empty($field['value']) ? 'Upload' : 'Change'))
 		);
 		Renderer::render_after_field();
 	}
 
-	public static function render_field_Editor($field, $meta)
+	public static function render_field_Editor($field)
 	{
 		Renderer::render_before_field($field);
-		wp_editor($meta, $field['id']);
+		wp_editor($field['value'], $field['id']);
 		Renderer::render_after_field();
 	}
 
-	public static function render_field_radio($field, $meta)
+	public static function render_field_radio($field)
 	{
 		Renderer::render_before_field($field);
 		foreach ($field['options'] as $key => $value) {
@@ -95,13 +99,13 @@ class Form
 				esc_attr(Renderer::get_block_element_class_with_namespace($field['type'])),
 				esc_attr($field['id']),
 				esc_attr($key),
-				checked($key == $meta, true, false)
+				checked($key == $field['value'], true, false)
 			);
 		}
 		Renderer::render_after_field($field); // pass in $field to render desc below input
 	}
 
-	public static function render_field_select($field, $meta)
+	public static function render_field_select($field)
 	{
 		Renderer::render_before_field($field);
 		echo '<select name="' . esc_attr($field['id']) . '">';
@@ -115,7 +119,7 @@ class Form
 				esc_attr(Renderer::get_block_element_class_with_namespace($field['type'])),
 				esc_attr($field['id']),
 				esc_attr($key),
-				selected($key == $meta, true, false)
+				selected($key == $field['value'], true, false)
 			);
 		}
 		echo '</select>';
@@ -123,7 +127,7 @@ class Form
 	}
 
 
-	public static function render_field_repeater($field, $meta): void
+	public static function render_field_repeater($field): void
 	{
 
 		Renderer::render_before_field($field);
@@ -135,9 +139,9 @@ class Form
 		);
 
 		$count = 0;
-		if (is_array($meta)) {
-			if (count($meta) > 0) {
-				foreach ($meta as $m) {
+		if (is_array($field['value'])) {
+			if (count($field['value']) > 0) {
+				foreach ($field['value'] as $m) {
 					self::render_repeated_block($field, $m, $count);
 					$count++;
 				}
@@ -164,7 +168,7 @@ class Form
 		// create a repeater block to use for the "add" functionality
 		ob_start();
 
-		sprintf('<div>%s</div>', esc_html(self::render_repeated_block($field, $meta, null, true)));
+		sprintf('<div>%s</div>', esc_html(self::render_repeated_block($field, $field['value'], null, true)));
 
 		$js_code = ob_get_clean();
 		$js_code = str_replace("\n", '', $js_code);
@@ -239,9 +243,9 @@ class Form
 				$child_field['id']
 			);
 
-			$child_meta = isset($meta[$old_id]) && !$isTemplate ? $meta[$old_id] : '';
+			$child_field['value'] = isset($meta[$old_id]) && !$isTemplate ? $meta[$old_id] : '';
 
-			call_user_func(array('self', 'render_field_' . $child_field['type']), $child_field, $child_meta);
+			call_user_func(array('self', 'render_field_' . $child_field['type']), $child_field);
 		}
 		echo '</div></div>';
 	}
