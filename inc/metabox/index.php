@@ -9,20 +9,13 @@ use J7\WpToolkit\Utils\Renderer;
 
 class Metabox extends Core
 {
-
-
-
 	/**
 	 * Stores the metabox config that
 	 * is supplied to the constructor.
 	 *
 	 * @var array
 	 */
-	private $_meta_box;
-
-	private $_folder_name;
-
-
+	private $_meta_box_config;
 
 	/**
 	 * Class constructor.
@@ -45,8 +38,7 @@ class Metabox extends Core
 			'priority' => 'default',
 		);
 
-		$this->_meta_box    = array_merge($defaults, $meta_box_config);
-		$this->_folder_name = 'wp-metabox-constructor-class';
+		$this->_meta_box_config    = array_merge($defaults, $meta_box_config);
 
 		\add_action('add_meta_boxes', array($this, 'add'));
 		\add_action('save_post', array($this, 'save'));
@@ -63,12 +55,12 @@ class Metabox extends Core
 	{
 		// TODO 額外參數要帶入嗎?
 		add_meta_box(
-			$this->_meta_box['id'],
-			$this->_meta_box['title'],
+			$this->_meta_box_config['id'],
+			$this->_meta_box_config['title'],
 			array($this, 'render'),
-			$this->_meta_box['screen'],
-			$this->_meta_box['context'],
-			$this->_meta_box['priority']
+			$this->_meta_box_config['screen'],
+			$this->_meta_box_config['context'],
+			$this->_meta_box_config['priority']
 		);
 	}
 
