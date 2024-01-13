@@ -24,8 +24,7 @@ class Metabox extends Core
 
 	private $_path;
 
-	private $_nonce_action;
-	private $_nonce_name;
+
 
 	/**
 	 * Stores the fields supplied to the
@@ -57,9 +56,6 @@ class Metabox extends Core
 		);
 
 		$this->_meta_box    = array_merge($defaults, $meta_box_config);
-		$this->_nonce_name  = $meta_box_config['id'] . '_nonce';
-		$this->_nonce_action  = $meta_box_config['id'] . '_action';
-
 		$this->_folder_name = 'wp-metabox-constructor-class';
 		$this->_path        = plugins_url($this->_folder_name, plugin_basename(dirname(__FILE__)));
 
@@ -78,28 +74,6 @@ class Metabox extends Core
 			$this->_meta_box['context'],
 			$this->_meta_box['priority']
 		);
-	}
-
-	/**
-	 * An aggregate function that renders tye contents of the metabox
-	 * by calling the appropriate, individual function for each
-	 * field type.
-	 *
-	 * @return void
-	 */
-	public function render($post_or_order_object): void
-	{
-		global $post;
-
-		$order = ($post_or_order_object instanceof \WP_Post) ? wc_get_order($post_or_order_object->ID) : $post_or_order_object;
-
-		wp_nonce_field($this->_nonce_action, $this->_nonce_name);
-		echo sprintf('<div class="%s">', Utils::KEBAB);
-		foreach ($this->_fields as $field) {
-			$meta = ($order) ? $order->get_meta($field['id']) : get_post_meta($post->ID, $field['id'], true);
-			call_user_func(array($this, 'render_field_' . $field['type']), $field, $meta);
-		}
-		echo '</div>';
 	}
 
 	/**
@@ -132,6 +106,30 @@ class Metabox extends Core
 			}
 		}
 	}
+
+	/**
+	 * An aggregate function that renders tye contents of the metabox
+	 * by calling the appropriate, individual function for each
+	 * field type.
+	 *
+	 * @return void
+	 */
+	public function render($post_or_order_object): void
+	{
+		global $post;
+
+		$order = ($post_or_order_object instanceof \WP_Post) ? wc_get_order($post_or_order_object->ID) : $post_or_order_object;
+
+		wp_nonce_field($this->_nonce_action, $this->_nonce_name);
+		echo sprintf('<div class="%s">', Utils::KEBAB);
+		foreach ($this->_fields as $field) {
+			$meta = ($order) ? $order->get_meta($field['id']) : get_post_meta($post->ID, $field['id'], true);
+			call_user_func(array($this, 'render_field_' . $field['type']), $field, $meta);
+		}
+		echo '</div>';
+	}
+
+
 
 	public function column($width, $contents)
 	{

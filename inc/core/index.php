@@ -9,10 +9,15 @@ use J7\WpToolkit\Utils;
 class Core
 {
 
-	private $screen;
-	function __construct($screens)
+	protected $screen;
+	protected $_nonce_action;
+	protected $_nonce_name;
+
+	function __construct($meta_box_config)
 	{
-		$this->screen = $screens;
+		$this->screen = $meta_box_config['screen'];
+		$this->_nonce_name  = $meta_box_config['id'] . '_nonce';
+		$this->_nonce_action  = $meta_box_config['id'] . '_action';
 		\add_action('admin_enqueue_scripts', array($this, 'scripts'));
 	}
 
