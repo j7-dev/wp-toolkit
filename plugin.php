@@ -20,6 +20,10 @@ declare(strict_types=1);
 
 namespace J7\WpToolkit;
 
+// TODO DELETE
+// require_once __DIR__ . '/wp-metabox/src/Metabox.php';
+
+
 use J7\WpToolkit\Utils;
 use YahnisElsts\PluginUpdateChecker\v5\PucFactory;
 
@@ -129,13 +133,14 @@ add_action('init', __NAMESPACE__ . '\metabox_test');
 
 function metabox_test()
 {
-	$metabox = new \J7\WpToolkit\Metabox(array(
+	$metabox = Metabox::init(array(
 		'id' => 'metabox_id',
 		'title' => 'My awesome metabox',
 		'screen' => 'post', // post type
 		'context' => 'advanced', // Options normal, side, advanced.
 		'priority' => 'default'
 	));
+
 	$metabox->addText(array(
 		'id' => 'metabox_text_field',
 		'label' => 'Text',

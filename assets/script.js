@@ -60,8 +60,8 @@
         return false;
       }
     );
-
-    $(".wp-toolkit__repeated-blocks").sortable({
+    // TODO 好像壞了
+    $(".wp-toolkit__repeated").sortable({
       opacity: 0.6,
       revert: true,
       cursor: "move",
