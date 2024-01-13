@@ -9,7 +9,6 @@ use J7\WpToolkit\Utils;
 class Metabox extends Core
 {
 
-	const BLOCK_NAMESPACE                  = 'mcc-box'; // (A.K.A "Metabox Constructor Class")
 	const REPEATER_INDEX_PLACEHOLDER       = 'CurrentCounter';
 	const REPEATER_ITEM_NUMBER_PLACEHOLDER = 'ItemNumber';
 
@@ -25,6 +24,7 @@ class Metabox extends Core
 
 	private $_path;
 
+	private $_nonce_action;
 	private $_nonce_name;
 
 	/**
@@ -58,6 +58,8 @@ class Metabox extends Core
 
 		$this->_meta_box    = array_merge($defaults, $meta_box_config);
 		$this->_nonce_name  = $meta_box_config['id'] . '_nonce';
+		$this->_nonce_action  = $meta_box_config['id'] . '_action';
+
 		$this->_folder_name = 'wp-metabox-constructor-class';
 		$this->_path        = plugins_url($this->_folder_name, plugin_basename(dirname(__FILE__)));
 
@@ -65,15 +67,13 @@ class Metabox extends Core
 		add_action('save_post', array($this, 'save'));
 	}
 
-
-
-
-	public function add()
+	public function add(): void
 	{
+		// TODO 額外參數要帶入嗎?
 		add_meta_box(
 			$this->_meta_box['id'],
 			$this->_meta_box['title'],
-			array($this, 'show'),
+			array($this, 'render'),
 			$this->_meta_box['screen'],
 			$this->_meta_box['context'],
 			$this->_meta_box['priority']
@@ -81,23 +81,23 @@ class Metabox extends Core
 	}
 
 	/**
-	 * An aggregate function that shows tye contents of the metabox
+	 * An aggregate function that renders tye contents of the metabox
 	 * by calling the appropriate, individual function for each
 	 * field type.
 	 *
 	 * @return void
 	 */
-	public function show($post_or_order_object)
+	public function render($post_or_order_object): void
 	{
 		global $post;
 
 		$order = ($post_or_order_object instanceof \WP_Post) ? wc_get_order($post_or_order_object->ID) : $post_or_order_object;
 
-		wp_nonce_field(basename(__FILE__), $this->_nonce_name);
-		echo sprintf('<div class="%s">', self::BLOCK_NAMESPACE);
+		wp_nonce_field($this->_nonce_action, $this->_nonce_name);
+		echo sprintf('<div class="%s">', Utils::KEBAB);
 		foreach ($this->_fields as $field) {
 			$meta = ($order) ? $order->get_meta($field['id']) : get_post_meta($post->ID, $field['id'], true);
-			call_user_func(array($this, 'show_field_' . $field['type']), $field, $meta);
+			call_user_func(array($this, 'render_field_' . $field['type']), $field, $meta);
 		}
 		echo '</div>';
 	}
@@ -115,7 +115,7 @@ class Metabox extends Core
 			(defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) || // prevent the data from being auto-saved
 			(!current_user_can('edit_post', $post_id)) || // check user permissions
 			((!isset($_POST[$this->_nonce_name]))) || // verify nonce (same with below)
-			(!wp_verify_nonce($_POST[$this->_nonce_name], basename(__FILE__)))
+			(!wp_verify_nonce($_POST[$this->_nonce_name], $this->_nonce_action))
 		) {
 			return;
 		}
@@ -174,10 +174,10 @@ class Metabox extends Core
 				sprintf(
 					'%s %s%s',
 					($isField
-						? (sprintf('%s__%s', self::BLOCK_NAMESPACE, 'field'))
+						? (sprintf('%s__%s', Utils::KEBAB, 'field'))
 						: ''
 					),
-					sprintf('%s__%s', self::BLOCK_NAMESPACE, ($isField ? 'field-' : '')),
+					sprintf('%s__%s', Utils::KEBAB, ($isField ? 'field-' : '')),
 					$element
 				)
 			);
@@ -197,7 +197,7 @@ class Metabox extends Core
 			return trim(
 				sprintf(
 					'%s-%s',
-					self::BLOCK_NAMESPACE,
+					Utils::KEBAB,
 					$suffix
 				)
 			);
@@ -377,14 +377,14 @@ class Metabox extends Core
 		$this->_fields[] = $field;
 	}
 
-	public function show_field_html($field, $meta)
+	public function render_field_html($field, $meta)
 	{
 		$this->before_field($field);
 		echo $field['html'];
 		$this->after_field();
 	}
 
-	public function show_field_text($field, $meta)
+	public function render_field_text($field, $meta)
 	{
 		$this->before_field($field);
 		echo sprintf(
@@ -396,7 +396,7 @@ class Metabox extends Core
 		$this->after_field();
 	}
 
-	public function show_field_textarea($field, $meta)
+	public function render_field_textarea($field, $meta)
 	{
 		$this->before_field($field);
 		echo sprintf(
@@ -408,7 +408,7 @@ class Metabox extends Core
 		$this->after_field();
 	}
 
-	public function show_field_checkbox($field, $meta)
+	public function render_field_checkbox($field, $meta)
 	{
 		$this->before_field($field);
 		echo sprintf(
@@ -420,7 +420,7 @@ class Metabox extends Core
 		$this->after_field($field); // pass in $field to render desc below input
 	}
 
-	public function show_field_image($field, $meta)
+	public function render_field_image($field, $meta)
 	{
 		$this->before_field($field, $meta); // pass in $meta for preview image
 		echo sprintf(
@@ -431,21 +431,21 @@ class Metabox extends Core
 		);
 		echo sprintf(
 			'<a class="%s button" data-hidden-input="%s">%s</a>',
-			esc_attr(sprintf('js-%s-image-upload-button', self::BLOCK_NAMESPACE)),
+			esc_attr(sprintf('js-%s-image-upload-button', Utils::KEBAB)),
 			esc_attr($field['id']),
 			esc_html(sprintf('%s Image', empty($meta) ? 'Upload' : 'Change'))
 		);
 		$this->after_field();
 	}
 
-	public function show_field_Editor($field, $meta)
+	public function render_field_Editor($field, $meta)
 	{
 		$this->before_field($field);
 		wp_editor($meta, $field['id']);
 		$this->after_field();
 	}
 
-	public function show_field_radio($field, $meta)
+	public function render_field_radio($field, $meta)
 	{
 		$this->before_field($field);
 		foreach ($field['options'] as $key => $value) {
@@ -465,7 +465,7 @@ class Metabox extends Core
 		$this->after_field($field); // pass in $field to render desc below input
 	}
 
-	public function show_field_select($field, $meta)
+	public function render_field_select($field, $meta)
 	{
 		$this->before_field($field);
 		echo '<select name="' . esc_attr($field['id']) . '">';
@@ -486,7 +486,7 @@ class Metabox extends Core
 		$this->after_field($field); // pass in $field to render desc below input
 	}
 
-	public function show_field_repeater($field, $meta): void
+	public function render_field_repeater($field, $meta): void
 	{
 		$this->before_field($field);
 
@@ -586,7 +586,7 @@ class Metabox extends Core
 			esc_attr($this->get_block_element_class_with_namespace('remove', false)),
 			esc_attr(sprintf('Remove %s', $field['single_label'])),
 			esc_attr($this->get_block_element_class_with_namespace('repeater-button', false)),
-			esc_attr(sprintf('js-%s-sort', self::BLOCK_NAMESPACE))
+			esc_attr(sprintf('js-%s-sort', Utils::KEBAB))
 		);
 
 		echo sprintf('<div class="%s is-hidden">', esc_attr($this->get_block_element_class_with_namespace('repeated-content', false)));
@@ -603,7 +603,7 @@ class Metabox extends Core
 
 			$child_meta = isset($meta[$old_id]) && !$isTemplate ? $meta[$old_id] : '';
 
-			call_user_func(array($this, 'show_field_' . $child_field['type']), $child_field, $child_meta);
+			call_user_func(array($this, 'render_field_' . $child_field['type']), $child_field, $child_meta);
 		}
 		echo '</div></div>';
 	}
