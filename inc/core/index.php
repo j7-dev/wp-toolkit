@@ -76,4 +76,78 @@ class Core
 		}
 		echo '</div>';
 	}
+
+
+	public function addField(array $field, bool $repeatable = false)
+	{
+		if (!$repeatable) {
+			$this->_fields[] = $field;
+		} else {
+			return $field;
+		}
+	}
+
+	public function addText(array $args, bool $repeatable = false)
+	{
+		$field = array_merge(array('type' => 'text'), $args);
+		return $this->addField($field, $repeatable);
+	}
+
+	public function addTextArea(array $args, bool $repeatable = false)
+	{
+		$field = array_merge(array('type' => 'textarea'), $args);
+		return $this->addField($field, $repeatable);
+	}
+
+	public function addCheckbox(array $args, bool $repeatable = false)
+	{
+		$field = array_merge(array('type' => 'checkbox'), $args);
+		return $this->addField($field, $repeatable);
+	}
+
+	public function addHtml(array $args, bool $repeatable = false)
+	{
+		$field = array_merge(array('type' => 'html'), $args);
+		return $this->addField($field, $repeatable);
+	}
+
+	public function addImage($args, $repeatable = false)
+	{
+		$field = array_merge(array('type' => 'image'), $args);
+		return $this->addField($field, $repeatable);
+	}
+
+	public function addEditor($args, $repeatable = false)
+	{
+		$field = array_merge(array('type' => 'Editor'), $args);
+		return $this->addField($field, $repeatable);
+	}
+
+	public function addRadio($args, $options, $repeatable = false)
+	{
+		$options = array('options' => $options);
+		$field   = array_merge(array('type' => 'radio'), $args, $options);
+		return $this->addField($field, $repeatable);
+	}
+
+	public function addSelect($args, $options, $repeatable = false)
+	{
+		$options = array('options' => $options);
+		$field   = array_merge(array('type' => 'select'), $args, $options);
+		return $this->addField($field, $repeatable);
+	}
+
+	public function addRepeaterBlock($args)
+	{
+		$field           = array_merge(
+			array(
+				'type'         => 'repeater',
+				'single_label' => 'Item',
+				'is_sortable'  => true,
+			),
+			$args
+		);
+
+		$this->_fields[] = $field;
+	}
 }

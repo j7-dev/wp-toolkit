@@ -82,7 +82,7 @@ if (!\class_exists('J7\WpToolkit\Init')) {
 	Init::instance();
 }
 
-
+//TODO DELETE
 add_action('init', __NAMESPACE__ . '\option_test');
 
 function option_test()
