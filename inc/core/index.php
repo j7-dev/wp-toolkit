@@ -150,10 +150,6 @@ class Core
 	 */
 	public function get_field_types()
 	{
-		ob_start();
-		print_r($this->_fields);
-		Utils::debug_log('' . ob_get_clean());
-
 		foreach ($this->_fields as $field) {
 			if (isset($field['type'])) {
 				$this->_field_types[] = \sanitize_key($field['type']);

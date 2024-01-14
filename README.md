@@ -1,11 +1,20 @@
 # WP Toolkit | 我的 WordPress 外掛
 一句話講完 WP Toolkit :
 
-> 這是一個 WordPress 外掛的範本，可以用來開發新的外掛。
+> WP Toolkit 是針對開發人員使用的 WordPress Plugin，理念是 library as plugin ，功能類似精簡版本的 metabox / ACF 讓你方便快速的創建頁面欄位還有 metabox
 
 <br><br><br>
 
-[ ] 上傳圖片時  不會馬上關閉視窗，應該要馬上關閉 <br>
+⬜ METABOX 上傳圖片時  不會馬上關閉視窗，應該要馬上關閉 <br>
+⬜ MENU 不能使用 repeater <br>
+⬜ 上傳圖片 JS 應該有重複 待優化<br>
+
+
+## 📦 Install
+
+如果你要將此套件做為你的套件依賴，推薦使用 TGM Plugin 來做套件依賴
+
+## Get Started
 
 ## ⚡ 主要功能
 
