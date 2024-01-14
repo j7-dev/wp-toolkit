@@ -128,8 +128,11 @@ abstract class Renderer
 	 *
 	 * @param string $desc
 	 */
-	public static function render_field_description(string $desc): void
+	public static function render_field_description(?string $desc): void
 	{
+		if (isset($desc)) {
+			return;
+		}
 		echo sprintf(
 			'<p class="%s">%s</p>',
 			\esc_attr(self::get_block_element_class_with_namespace('description', false)),

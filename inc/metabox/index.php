@@ -29,7 +29,7 @@ class Metabox extends Core
 	 */
 	public function __construct($meta_box_config)
 	{
-		parent::__construct($meta_box_config);
+		$this->_config = $meta_box_config;
 		$this->_fields = [];
 		$this->_nonce_name  = $meta_box_config['id'] ?? '' . '_nonce';
 		$this->_nonce_action  = $meta_box_config['id'] ?? '' . '_action';
@@ -43,6 +43,7 @@ class Metabox extends Core
 
 		\add_action('add_meta_boxes', array($this, 'add'));
 		\add_action('save_post', array($this, 'save'));
+		\add_action('admin_enqueue_scripts', array($this, 'scripts'));
 	}
 
 	public static function init($meta_box_config): self

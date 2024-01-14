@@ -22,14 +22,6 @@ class Core
 	protected $_fields = [];
 	protected $_field_types;
 
-
-	// TODO remove
-	function __construct($config)
-	{
-		$this->_config = $config;
-		\add_action('admin_enqueue_scripts', array($this, 'scripts'));
-	}
-
 	public function get_instance(): self
 	{
 		return $this->_instance;

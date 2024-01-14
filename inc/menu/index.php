@@ -35,7 +35,6 @@ class Menu extends Core
 	 */
 	public function __construct(string $key)
 	{
-		parent::__construct($key);
 		$this->_config = [
 			'screen' => $key
 		];
