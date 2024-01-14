@@ -20,7 +20,7 @@ class Core
 	 *
 	 * @var array
 	 */
-	protected $_fields;
+	protected $_fields = [];
 	protected $_field_types;
 
 

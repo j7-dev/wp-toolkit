@@ -85,7 +85,52 @@ if (!\class_exists('J7\WpToolkit\Init')) {
 }
 
 //TODO DELETE
-// add_action('init', __NAMESPACE__ . '\origin_option');
+
+
+
+add_action('init', __NAMESPACE__ . '\new_option');
+function new_option()
+{
+	$option = new Menu();
+	$option->addMenu(
+		array(
+			'id'       => 'j7',
+			'page_title' => __('j7 Settings', 'plugin-name'),
+			'menu_title' => __('j7', 'plugin-name'),
+			'capability' => 'manage_options',
+			'icon'       => 'dashicons-performance',
+			'position'   => 1000,
+			'parent'     => 'edit.php',
+		)
+	);
+	$option->addTab(
+		array(
+			array(
+				'id'    => 'tab1',
+				'title' => __('Tab1', 'plugin-name'),
+				'desc'  => __('These are general settings for Plugin Name', 'plugin-name'),
+			),
+			array(
+				'id'    => 'tab2',
+				'title' => __('Tab2', 'plugin-name'),
+				'desc'  => __('These are advance settings for Plugin Name', 'plugin-name')
+			),
+			array(
+				'id'    => 'tab3',
+				'title' => __('Tab3', 'plugin-name'),
+				'desc'  => __('These are advance settings for Plugin Name', 'plugin-name')
+			)
+		)
+	);
+
+	$option->addText(array(
+		'id' => 'metabox_text_field',
+		'label' => 'Text',
+		'desc' => 'An example description paragraph that appears below the label.',
+		'tab_id' => 'tab1'
+	));
+	$option->mount();
+}
 
 function origin_option()
 {
@@ -131,20 +176,6 @@ function origin_option()
 		)
 	);
 	$option->register();
-}
-
-add_action('init', __NAMESPACE__ . '\new_option');
-function new_option()
-{
-	$option = Option::init([
-		'id'       => 'j7',
-		'page_title' => __('j7 Settings', 'plugin-name'),
-		'menu_title' => __('j7', 'plugin-name'),
-		'capability' => 'manage_options',
-		'icon'       => 'dashicons-performance',
-		'position'   => 10,
-		'parent'     => 'edit.php',
-	]);
 }
 
 add_action('init', __NAMESPACE__ . '\metabox_test');

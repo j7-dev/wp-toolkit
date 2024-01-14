@@ -20,10 +20,10 @@ class Form
 		Renderer::render_before_field($field);
 		echo sprintf(
 			'<input type="text" class="%1$s" id="%2$s" name="%2$s" value="%3$s" placeholder="%4$s">',
-			esc_attr($field['size'] . '-text ' . $field['class'] . ' ' . Renderer::get_block_element_class_with_namespace($field['type'])),
-			esc_attr($field['id']),
-			esc_attr($field['value']),
-			esc_attr($field['placeholder'])
+			esc_attr($field['size'] ?? 'regular' . '-text ' . $field['class'] ?? '' . ' ' . Renderer::get_block_element_class_with_namespace($field['type'])),
+			esc_attr($field['id'] ?? ''),
+			esc_attr($field['value'] ?? ''),
+			esc_attr($field['placeholder'] ?? '')
 		);
 		Renderer::render_after_field();
 	}
