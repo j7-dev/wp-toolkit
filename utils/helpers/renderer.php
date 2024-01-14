@@ -98,16 +98,13 @@ abstract class Renderer
 
 		if (isset($field['label'])) {
 			echo sprintf(
-				'<label class="%s" for="%s">%s</label>',
+				'<label class="%s" for="%s">%s</label><br />',
 				\esc_attr(self::get_block_element_class_with_namespace('label', false)),
 				\esc_attr($field['id']),
 				\esc_html($field['label'])
 			);
 		}
 
-		if (isset($field['desc']) && $field['type'] != 'checkbox') {
-			self::render_field_description($field['desc']);
-		}
 		if ($field['type'] == 'image') {
 			self::render_image_preview($field);
 		}
@@ -120,9 +117,8 @@ abstract class Renderer
 	 */
 	public static function render_after_field($field = null): void
 	{
-		if (isset($field['desc']) && $field['type'] === 'checkbox') {
-			self::render_field_description($field['desc']);
-		}
+		self::render_field_description($field['desc']);
+
 		echo '</div>';
 	}
 

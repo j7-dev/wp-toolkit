@@ -91,7 +91,11 @@ if (!\class_exists('J7\WpToolkit\Init')) {
 add_action('init', __NAMESPACE__ . '\new_option');
 function new_option()
 {
-	$option = new Menu();
+	// global $menu;
+	// echo '<pre>';
+	// var_dump($menu);
+	// echo '</pre>';
+	$option = new Menu('j7');
 	$option->addMenu(
 		array(
 			'id'       => 'j7',
@@ -100,7 +104,7 @@ function new_option()
 			'capability' => 'manage_options',
 			'icon'       => 'dashicons-performance',
 			'position'   => 1000,
-			'parent'     => 'edit.php',
+			'parent'     => 'edit.php?post_type=product',
 		)
 	);
 	$option->addTab(

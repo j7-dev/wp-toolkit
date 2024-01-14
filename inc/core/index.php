@@ -11,8 +11,7 @@ class Core
 {
 	protected static $_instance;
 	protected static $_config = [];
-	protected $_nonce_action;
-	protected $_nonce_name;
+
 
 	/**
 	 * Stores the fields supplied to the
@@ -24,11 +23,10 @@ class Core
 	protected $_field_types;
 
 
+	// TODO remove
 	function __construct($config)
 	{
 		$this->_config = $config;
-		$this->_nonce_name  = $config['id'] . '_nonce';
-		$this->_nonce_action  = $config['id'] . '_action';
 		\add_action('admin_enqueue_scripts', array($this, 'scripts'));
 	}
 
@@ -39,8 +37,9 @@ class Core
 
 	public function scripts(): void
 	{
+		$class = get_class($this);
 
-		if (!Utils::is_in_screens($this->_config['screen'])) {
+		if (!Utils::is_in_screens($this->_config['screen'], $class)) {
 			return;
 		}
 
@@ -71,15 +70,6 @@ class Core
 			\wp_enqueue_style('wp-color-picker');
 			\wp_enqueue_script('wp-color-picker');
 		}
-	}
-
-	protected function can_save(): bool
-	{
-		global $post_id;
-		return !((defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) || // prevent the data from being auto-saved
-			(!\current_user_can('edit_post', $post_id)) || // check user permissions
-			((!isset($_POST[$this->_nonce_name]))) || // verify nonce (same with below)
-			(!\wp_verify_nonce($_POST[$this->_nonce_name], $this->_nonce_action)));
 	}
 
 	public function addField(array $field, bool $repeatable = false)

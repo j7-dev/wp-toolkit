@@ -18,11 +18,33 @@ abstract class Utils
 	/**
 	 * check if is in admin page to load script
 	 */
-	public static function is_in_screens($screens): bool
+	public static function is_in_screens($screens, string $class): bool
 	{
-		global $typenow;
-		return (is_array($screens) && in_array($typenow, $screens)) ||
-			(is_string($screens) && $typenow === $screens);
+		global $typenow, $pagenow;
+		$screen = get_current_screen();
+
+
+		ob_start();
+		print_r([
+			'screens' => $screens,
+			'typenow' => $typenow,
+			'pagenow' => $pagenow,
+			'screen_id' => $screen->id,
+		]);
+		Utils::debug_log(' is_in_screens ' . ob_get_clean());
+
+		switch ($class) {
+			case 'J7\WpToolkit\Metabox':
+				return (is_array($screens) && in_array($typenow, $screens)) ||
+					(is_string($screens) && $typenow === $screens);
+				break;
+			case 'J7\WpToolkit\Menu':
+				return strpos($screen->id, $screens) !== false;
+				break;
+			default:
+				return false;
+				break;
+		}
 	}
 
 	public static function debug_log($log_line): void

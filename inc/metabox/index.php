@@ -13,6 +13,8 @@ class Metabox extends Core
 	 * @var array
 	 */
 	private $_meta_box_config;
+	private $_nonce_action;
+	private $_nonce_name;
 
 	/**
 	 * Class constructor.
@@ -29,6 +31,8 @@ class Metabox extends Core
 	{
 		parent::__construct($meta_box_config);
 		$this->_fields = [];
+		$this->_nonce_name  = $meta_box_config['id'] ?? '' . '_nonce';
+		$this->_nonce_action  = $meta_box_config['id'] ?? '' . '_action';
 
 		$defaults = array(
 			'context'  => 'advanced',
@@ -109,5 +113,14 @@ class Metabox extends Core
 			\call_user_func(['J7\WpToolkit\Components\Form', 'render_field_' . $field['type']], $field);
 		}
 		echo '</div>';
+	}
+
+	protected function can_save(): bool
+	{
+		global $post_id;
+		return !((defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) || // prevent the data from being auto-saved
+			(!\current_user_can('edit_post', $post_id)) || // check user permissions
+			((!isset($_POST[$this->_nonce_name]))) || // verify nonce (same with below)
+			(!\wp_verify_nonce($_POST[$this->_nonce_name], $this->_nonce_action)));
 	}
 }

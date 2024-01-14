@@ -33,10 +33,12 @@ class Menu extends Core
 	 *   - 'priority' (string) The priority of the metabox. Default is 'default'.
 	 * @return void
 	 */
-	public function __construct()
+	public function __construct(string $key)
 	{
-
-		// parent::__construct($config);
+		parent::__construct($key);
+		$this->_config = [
+			'screen' => $key
+		];
 	}
 
 	public function addMenu(array $menu): void
@@ -55,6 +57,7 @@ class Menu extends Core
 
 		\add_action('admin_init', [$this, 'admin_init']);
 		\add_action('admin_menu', [$this, 'set_menu']);
+		\add_action('admin_enqueue_scripts', array($this, 'scripts'));
 		// \add_action('admin_menu', array($this, 'set'));
 	}
 
@@ -101,8 +104,6 @@ class Menu extends Core
 			'icon'       => '',
 			// position
 			'position'   => 100,
-			// For sub menu, we can define parent menu slug (Defaults to Options Page)
-			'parent'     => 'options-general.php',
 			'tabs' => $default_tabs_menu_config
 		];
 
@@ -167,13 +168,6 @@ class Menu extends Core
 				continue;
 			}
 
-			ob_start();
-			print_r([
-				'id' => $tab['id'],
-				'option_group' => $this->_menu_config['id'],
-			]);
-			Utils::debug_log(' add_settings_section ' . ob_get_clean());
-
 			\add_settings_section(
 				$tab['id'],
 				$tab['title'],
@@ -186,15 +180,9 @@ class Menu extends Core
 
 	public function render_tabs($tab)
 	{
-
 		if (isset($tab['desc'])) {
 			echo "<div class='inside'>" . \esc_html($tab['desc']) . "</div>";
 		}
-
-
-
-
-		echo ' ----------- render_tabs -----------';
 	}
 
 	public function render_field_loop()
@@ -213,13 +201,6 @@ class Menu extends Core
 			$field['value'] = get_option($field['id'], $field['default']);
 			$field['label_for'] = $field['id'];
 
-			ob_start();
-			print_r([
-				'id' => $field['id'],
-				'options_group' => $this->_menu_config['id'],
-			]);
-			Utils::debug_log(' add_settings_field ' . ob_get_clean());
-
 			\add_settings_field(
 				$field['id'],
 				$field['label'],
@@ -236,17 +217,6 @@ class Menu extends Core
 
 		// creates our settings in the options table
 		foreach ($this->_fields as $field) :
-			ob_start();
-			print_r([
-				'options_group' => ($this->_is_tabs) ?
-					$this->get_options_group($field['tab_id'])
-					: $this->get_options_group(),
-				'options_id' => $field['id'],
-				'field' => $field,
-
-			]);
-			Utils::debug_log(' register_settings ' . ob_get_clean());
-
 
 			\register_setting(
 				($this->_is_tabs) ?

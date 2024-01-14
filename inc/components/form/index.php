@@ -25,7 +25,7 @@ class Form
 			esc_attr($field['value'] ?? ''),
 			esc_attr($field['placeholder'] ?? '')
 		);
-		Renderer::render_after_field();
+		Renderer::render_after_field($field);
 	}
 
 
@@ -38,7 +38,7 @@ class Form
 			esc_attr($field['id']),
 			esc_html($field['value'])
 		);
-		Renderer::render_after_field();
+		Renderer::render_after_field($field);
 	}
 
 	public static function render_field_checkbox($field)
@@ -57,7 +57,7 @@ class Form
 	{
 		Renderer::render_before_field($field);
 		echo $field['html'];
-		Renderer::render_after_field();
+		Renderer::render_after_field($field);
 	}
 
 	public static function render_field_image($field)
@@ -75,14 +75,14 @@ class Form
 			esc_attr($field['id']),
 			esc_html(sprintf('%s Image', empty($field['value']) ? 'Upload' : 'Change'))
 		);
-		Renderer::render_after_field();
+		Renderer::render_after_field($field);
 	}
 
 	public static function render_field_Editor($field)
 	{
 		Renderer::render_before_field($field);
 		wp_editor($field['value'], $field['id']);
-		Renderer::render_after_field();
+		Renderer::render_after_field($field);
 	}
 
 	public static function render_field_radio($field)
@@ -163,7 +163,7 @@ class Form
 			esc_html(sprintf('Add %s', $field['single_label']))
 		);
 
-		Renderer::render_after_field();
+		Renderer::render_after_field($field);
 
 		// create a repeater block to use for the "add" functionality
 		ob_start();
