@@ -21,7 +21,9 @@ declare(strict_types=1);
 namespace J7\WpToolkit;
 
 // TODO DELETE
-// require_once __DIR__ . '/wp-metabox/src/Metabox.php';
+require_once __DIR__ . '/wp-option/src/Option.php';
+require_once __DIR__ . '/wp-option/src/Helper.php';
+
 
 
 use J7\WpToolkit\Utils;
@@ -83,17 +85,19 @@ if (!\class_exists('J7\WpToolkit\Init')) {
 }
 
 //TODO DELETE
-add_action('init', __NAMESPACE__ . '\option_test');
+// add_action('init', __NAMESPACE__ . '\origin_option');
 
-function option_test()
+function origin_option()
 {
-	$option = new \J7\WpToolkit\Option('j7');
+	// $option = new \J7\WpToolkit\Option('j7');
+	$option = new \ODS\Option('oberon');
+
 	$option->addMenu(
 		array(
-			'page_title' => __('Plugin Name Settings', 'plugin-name'),
-			'menu_title' => __('Plugin Name', 'plugin-name'),
+			'page_title' => __('oberon Settings', 'plugin-name'),
+			'menu_title' => __('oberon', 'plugin-name'),
 			'capability' => 'manage_options',
-			'slug'       => 'plugin-name',
+			'slug'       => 'oberon',
 			'icon'       => 'dashicons-performance',
 			'position'   => 10,
 			'submenu'    => true,
@@ -127,6 +131,20 @@ function option_test()
 		)
 	);
 	$option->register();
+}
+
+add_action('init', __NAMESPACE__ . '\new_option');
+function new_option()
+{
+	$option = Option::init([
+		'id'       => 'j7',
+		'page_title' => __('j7 Settings', 'plugin-name'),
+		'menu_title' => __('j7', 'plugin-name'),
+		'capability' => 'manage_options',
+		'icon'       => 'dashicons-performance',
+		'position'   => 10,
+		'parent'     => 'edit.php',
+	]);
 }
 
 add_action('init', __NAMESPACE__ . '\metabox_test');
