@@ -22,24 +22,6 @@ class Menu extends Core
 	private $_is_tabs = false;
 	private $_active_tab;
 
-	/**
-	 * Class constructor.
-	 *
-	 * @param array $args An associative array with the following keys:
-	 *   - 'id'       (string) The metabox ID.
-	 *   - 'title'    (string) The title of the metabox.
-	 *   - 'screen'   (string) The post type for which to display the metabox.
-	 *   - 'context'  (string) The context in which to display the metabox. Options: normal, side, advanced.
-	 *   - 'priority' (string) The priority of the metabox. Default is 'default'.
-	 * @return void
-	 */
-	public function __construct(string $key)
-	{
-		$this->_config = [
-			'screen' => $key
-		];
-	}
-
 	public function addMenu(array $menu): void
 	{
 		$this->_menu_config = $menu;
@@ -78,7 +60,7 @@ class Menu extends Core
 	/**
 	 * Set Properties of the class
 	 */
-	private function set_properties($config): void
+	private function set_properties(array $config): void
 	{
 		$this->_instance = $this;
 

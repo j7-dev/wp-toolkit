@@ -16,42 +16,41 @@ class Metabox extends Core
 	private $_nonce_action;
 	private $_nonce_name;
 
-	/**
-	 * Class constructor.
-	 *
-	 * @param array $args An associative array with the following keys:
-	 *   - 'id'       (string) The metabox ID.
-	 *   - 'title'    (string) The title of the metabox.
-	 *   - 'screen'   (string) The post type for which to display the metabox.
-	 *   - 'context'  (string) The context in which to display the metabox. Options: normal, side, advanced.
-	 *   - 'priority' (string) The priority of the metabox. Default is 'default'.
-	 * @return void
-	 */
-	public function __construct($meta_box_config)
+	public function mount()
 	{
-		$this->_config = $meta_box_config;
-		$this->_fields = [];
-		$this->_nonce_name  = $meta_box_config['id'] ?? '' . '_nonce';
-		$this->_nonce_action  = $meta_box_config['id'] ?? '' . '_action';
-
-		$defaults = array(
-			'context'  => 'advanced',
-			'priority' => 'default',
-		);
-
-		$this->_meta_box_config    = array_merge($defaults, $meta_box_config);
+		$this->set_properties($this->_meta_box_config);
 
 		\add_action('add_meta_boxes', array($this, 'add'));
 		\add_action('save_post', array($this, 'save'));
 		\add_action('admin_enqueue_scripts', array($this, 'scripts'));
 	}
 
-	public static function init($meta_box_config): self
+	/**
+	 * Set Properties of the class
+	 */
+	private function set_properties(array $config): void
 	{
-		$instance = new self($meta_box_config);
-		$instance->_instance = $instance;
-		return $instance->_instance;
+		$this->_instance = $this;
+
+		$this->_config = [
+			'screen' => $config['screen']
+		];
+		$this->_nonce_name  = $config['id'] ?? '' . '_nonce';
+		$this->_nonce_action  = $config['id'] ?? '' . '_action';
+
+		$defaults = array(
+			'context'  => 'advanced',
+			'priority' => 'default',
+		);
+
+		$this->_meta_box_config    = array_merge($defaults, $config);
 	}
+
+	public function addMetabox(array $meta_box_config)
+	{
+		$this->_meta_box_config = $meta_box_config;
+	}
+
 
 	public function add(): void
 	{

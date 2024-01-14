@@ -133,60 +133,43 @@ function new_option()
 		'desc' => 'An example description paragraph that appears below the label.',
 		'tab_id' => 'tab1'
 	));
+	$option->addTextArea(array(
+		'id' => 'metabox_repeater_textarea_field',
+		'label' => 'Photo Description',
+		'tab_id' => 'tab1'
+	));
+	$metabox_repeater_block_fields[] = $option->addText(array(
+		'id' => 'metabox_repeater_text_field',
+		'label' => 'Photo Title'
+	), true);
+	$metabox_repeater_block_fields[] = $option->addTextArea(array(
+		'id' => 'metabox_repeater_textarea_field',
+		'label' => 'Photo Description'
+	), true);
+
+	$metabox_repeater_block_fields[] = $option->addImage(array(
+		'id' => 'metabox_repeater_image_field',
+		'label' => 'Upload Photo'
+	), true);
+
+	$option->addRepeaterBlock(array(
+		'id' => 'metabox_repeater_block',
+		'label' => 'Photo Gallery',
+		'fields' => $metabox_repeater_block_fields,
+		'desc' => 'Photos in a photo gallery.',
+		'single_label' => 'Photo'
+	));
 	$option->mount();
 }
 
-function origin_option()
-{
-	// $option = new \J7\WpToolkit\Option('j7');
-	$option = new \ODS\Option('oberon');
 
-	$option->addMenu(
-		array(
-			'page_title' => __('oberon Settings', 'plugin-name'),
-			'menu_title' => __('oberon', 'plugin-name'),
-			'capability' => 'manage_options',
-			'slug'       => 'oberon',
-			'icon'       => 'dashicons-performance',
-			'position'   => 10,
-			'submenu'    => true,
-			'parent'     => 'edit.php',
-		)
-	);
-	$option->addText(
-		'advance_section',
-		array(
-			'id'                => 'text_field_id',
-			'label'             => __('Hello World', 'plugin-name'),
-			'desc'              => __('Some description of my field', 'plugin-name'),
-			'placeholder'       => 'This is Placeholder',
-			'show_in_rest'      => true,
-			'class'             => 'my_custom_css_class',
-			'size'              => 'regular',
-		),
-	);
-	$option->addTab(
-		array(
-			array(
-				'id'    => 'general_section',
-				'title' => __('General Settings', 'plugin-name'),
-				'desc'  => __('These are general settings for Plugin Name', 'plugin-name'),
-			),
-			array(
-				'id'    => 'advance_section',
-				'title' => __('Advanced Settings', 'plugin-name'),
-				'desc'  => __('These are advance settings for Plugin Name', 'plugin-name')
-			)
-		)
-	);
-	$option->register();
-}
 
 add_action('init', __NAMESPACE__ . '\metabox_test');
 
 function metabox_test()
 {
-	$metabox = Metabox::init(array(
+	$metabox = new Metabox('metabox_id');
+	$metabox->addMetabox(array(
 		'id' => 'metabox_id',
 		'title' => 'My awesome metabox',
 		'screen' => 'post', // post type
@@ -220,4 +203,5 @@ function metabox_test()
 		'desc' => 'Photos in a photo gallery.',
 		'single_label' => 'Photo'
 	));
+	$metabox->mount();
 }

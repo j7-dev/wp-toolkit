@@ -22,6 +22,14 @@ class Core
 	protected $_fields = [];
 	protected $_field_types;
 
+	public function __construct(string $key)
+	{
+		$this->_config = [
+			'key' => $key,
+			'screen' => $key
+		];
+	}
+
 	public function get_instance(): self
 	{
 		return $this->_instance;
@@ -142,6 +150,9 @@ class Core
 	 */
 	public function get_field_types()
 	{
+		ob_start();
+		print_r($this->_fields);
+		Utils::debug_log('' . ob_get_clean());
 
 		foreach ($this->_fields as $field) {
 			if (isset($field['type'])) {

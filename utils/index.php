@@ -24,14 +24,14 @@ abstract class Utils
 		$screen = get_current_screen();
 
 
-		ob_start();
-		print_r([
-			'screens' => $screens,
-			'typenow' => $typenow,
-			'pagenow' => $pagenow,
-			'screen_id' => $screen->id,
-		]);
-		Utils::debug_log(' is_in_screens ' . ob_get_clean());
+		// ob_start();
+		// print_r([
+		// 	'screens' => $screens,
+		// 	'typenow' => $typenow,
+		// 	'pagenow' => $pagenow,
+		// 	'screen_id' => $screen->id,
+		// ]);
+		// Utils::debug_log(' is_in_screens ' . ob_get_clean());
 
 		switch ($class) {
 			case 'J7\WpToolkit\Metabox':
