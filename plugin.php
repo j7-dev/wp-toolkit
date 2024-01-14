@@ -4,7 +4,7 @@
  * Plugin Name:       WP Toolkit
  * Plugin URI:        https://cloud.luke.cafe/plugins/
  * Description:       方便開發 WordPress 外掛的工具包。
- * Version:           0.1.0
+ * Version:           0.1.1
  * Requires at least: 5.7
  * Requires PHP:      7.4
  * Author:            J7
@@ -82,7 +82,10 @@ if (!\class_exists('J7\WpToolkit\Init')) {
 
 
 
-add_action('init', __NAMESPACE__ . '\new_option');
+// add_action('init', __NAMESPACE__ . '\new_option');
+// add_action('init', __NAMESPACE__ . '\metabox_test');
+
+
 function new_option()
 {
 	// global $menu;
@@ -158,7 +161,6 @@ function new_option()
 
 
 
-add_action('init', __NAMESPACE__ . '\metabox_test');
 
 function metabox_test()
 {
