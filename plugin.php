@@ -23,9 +23,9 @@ namespace J7\WpToolkit;
 use J7\WpToolkit\Utils;
 use YahnisElsts\PluginUpdateChecker\v5\PucFactory;
 
-if (!\class_exists('J7\WpToolkit\Init')) {
+if (!\class_exists('J7\WpToolkit\Plugin')) {
 
-	class Init
+	class Plugin
 	{
 		private static $instance;
 
@@ -75,15 +75,15 @@ if (!\class_exists('J7\WpToolkit\Init')) {
 		}
 	}
 
-	Init::instance();
+	Plugin::instance();
 }
 
 //TODO DELETE
 
 
 
-// add_action('init', __NAMESPACE__ . '\new_option');
-// add_action('init', __NAMESPACE__ . '\metabox_test');
+add_action('init', __NAMESPACE__ . '\new_option');
+add_action('init', __NAMESPACE__ . '\metabox_test');
 
 
 function new_option()
@@ -135,26 +135,11 @@ function new_option()
 		'label' => 'Photo Description',
 		'tab_id' => 'tab1'
 	));
-	$metabox_repeater_block_fields[] = $option->addText(array(
-		'id' => 'metabox_repeater_text_field',
-		'label' => 'Photo Title'
-	), true);
-	$metabox_repeater_block_fields[] = $option->addTextArea(array(
-		'id' => 'metabox_repeater_textarea_field',
-		'label' => 'Photo Description'
-	), true);
-
-	$metabox_repeater_block_fields[] = $option->addImage(array(
-		'id' => 'metabox_repeater_image_field',
-		'label' => 'Upload Photo'
-	), true);
-
-	$option->addRepeaterBlock(array(
-		'id' => 'metabox_repeater_block',
-		'label' => 'Photo Gallery',
-		'fields' => $metabox_repeater_block_fields,
-		'desc' => 'Photos in a photo gallery.',
-		'single_label' => 'Photo'
+	$option->addCheckbox(array(
+		'id' => 'metabox_checkbox_field',
+		'label' => 'Checkbox',
+		'tab_id' => 'tab1',
+		'desc' => 'An example description paragraph that appears below the label.'
 	));
 	$option->mount();
 }
