@@ -4,7 +4,7 @@
  * Plugin Name:       WP Toolkit
  * Plugin URI:        https://cloud.luke.cafe/plugins/
  * Description:       方便開發 WordPress 外掛的工具包。
- * Version:           0.2.0
+ * Version:           0.2.1
  * Requires at least: 5.7
  * Requires PHP:      7.4
  * Author:            J7
@@ -39,7 +39,7 @@ if (!\class_exists('J7\WpToolkit\Plugin', false)) {
 			\register_deactivation_hook(__FILE__, [$this, 'deactivate']);
 
 
-			if (!Utils::DEV_MODE) {
+			if (!Utils::get_dev_mode()) {
 				\add_action('current_screen', [$this, 'remove_redux_banner'], 100);
 				\add_action('admin_menu', [$this, 'remove_redux_submenu'], 100);
 			}

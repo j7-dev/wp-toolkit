@@ -15,7 +15,11 @@ if (!\class_exists('J7\WpToolkit\Utils', false)) {
 		const SNAKE               = 'wp_toolkit';
 		const DEFAULT_IMAGE       = 'http://1.gravatar.com/avatar/1c39955b5fe5ae1bf51a77642f052848?s=96&d=mm&r=g';
 		const GITHUB_REPO         = 'https://github.com/j7-dev/wp-toolkit';
-		const DEV_MODE						= true;
+
+		public static function get_dev_mode(): bool
+		{
+			return $_SERVER['HTTP_HOST'] === 'test.local';
+		}
 
 		public static function debug_log($log_line): void
 		{
