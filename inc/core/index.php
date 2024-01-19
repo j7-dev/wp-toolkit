@@ -74,13 +74,27 @@ class Core
 
 	public function addField(array $field, bool $repeatable = false)
 	{
+		$class = get_class($this);
+		$field['instance_class'] = $class;
+
 		if (!$repeatable) {
 			$this->_fields[] = $field;
 		} else {
 			return $field;
 		}
 	}
-
+	/**
+	 * Undocumented function
+	 *
+	 * @param array $args 包含 class, id, value, placeholder, size
+	 *                   - 'class' (string)：
+	 *                   - 'id' (string)：same as name
+	 *                   - 'value' (string)：
+	 * 								 - 'placeholder' (string)：
+	 * 								 - 'size' (string)：regular
+	 * 								 - 'tab_id' (string)：only work in option
+	 * @param boolean $repeatable
+	 */
 	public function addText(array $args, bool $repeatable = false)
 	{
 		$field = array_merge(array('type' => 'text'), $args);

@@ -96,7 +96,7 @@ abstract class Renderer
 			\esc_attr(self::get_block_element_class_with_namespace($field['type'] . '-container', false))
 		);
 
-		if (isset($field['label'])) {
+		if (isset($field['label']) && $field['instance_class'] != 'J7\WpToolkit\Menu') {
 			echo sprintf(
 				'<label class="%s" for="%s">%s</label><br />',
 				\esc_attr(self::get_block_element_class_with_namespace('label', false)),
