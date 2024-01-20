@@ -23,6 +23,7 @@ namespace J7\WpToolkit;
 use J7\WpToolkit\Utils;
 use YahnisElsts\PluginUpdateChecker\v5\PucFactory;
 
+
 if (!\class_exists('J7\WpToolkit\Plugin', false)) {
 
 	final class Plugin
@@ -32,12 +33,17 @@ if (!\class_exists('J7\WpToolkit\Plugin', false)) {
 		public function __construct()
 		{
 			require_once __DIR__ . '/vendor/autoload.php';
+			// 這邊超怪的，明明已經用 composer 裝了，不知道為什麼要這樣寫才能 load Redux
+			if (!\class_exists('Redux')) {
+				require_once __DIR__ . '/vendor/wpackagist-plugin/redux-framework/redux-framework.php';
+			}
 			require_once __DIR__ . '/utils/index.php';
 			require_once __DIR__ . '/inc/index.php';
 
+
+
 			\register_activation_hook(__FILE__, [$this, 'activate']);
 			\register_deactivation_hook(__FILE__, [$this, 'deactivate']);
-
 
 			if (!Utils::get_dev_mode()) {
 				\add_action('current_screen', [$this, 'remove_redux_banner'], 100);

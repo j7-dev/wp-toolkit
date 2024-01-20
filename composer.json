@@ -1,10 +1,20 @@
 {
+  "repositories": [
+    {
+      "type": "composer",
+      "url": "https://wpackagist.org",
+      "only": [
+        "wpackagist-plugin/*"
+      ]
+    }
+  ],
   "require": {
-    "yahnis-elsts/plugin-update-checker": "^5.3"
+    "yahnis-elsts/plugin-update-checker": "^5.3",
+    "wpackagist-plugin/redux-framework": "^4.4"
   },
-  "autoload": {
-    "psr-4": {
-      "J7\\WpToolkit\\": "utils/"
+  "config": {
+    "allow-plugins": {
+      "composer/installers": false
     }
   }
 }

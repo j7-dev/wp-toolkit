@@ -18,6 +18,7 @@ if (!\class_exists('J7\WpToolkit\Utils', false)) {
 
 		public static function get_dev_mode(): bool
 		{
+			return false;
 			return $_SERVER['HTTP_HOST'] === 'test.local';
 		}
 

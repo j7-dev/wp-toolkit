@@ -1,2 +1,2 @@
 <?php
-require_once __DIR__ . '/redux-framework/redux-framework.php';
+// require_once __DIR__ . '/class/index.php';
