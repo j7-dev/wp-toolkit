@@ -36,6 +36,9 @@ final class Bootstrap
 		<script>
 			tailwind.config = {
 				important: '.tailwindcss',
+				corePlugins: {
+					preflight: false,
+				},
 			}
 		</script>
 <?php

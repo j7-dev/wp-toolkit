@@ -39,7 +39,7 @@ if (!\class_exists('J7\WpToolkit\Utils', false)) {
 
 		public static function get_plugin_dir(): string
 		{
-			$plugin_dir = \untrailingslashit(\wp_normalize_path(\plugin_dir_path(__DIR__ . '../')));
+			$plugin_dir = \untrailingslashit(\wp_normalize_path(ABSPATH . 'wp-content/plugins/wp-toolkit'));
 			return $plugin_dir;
 		}
 
@@ -54,6 +54,40 @@ if (!\class_exists('J7\WpToolkit\Utils', false)) {
 			$plugin_data = \get_plugin_data(Utils::get_plugin_dir() . '/plugin.php');
 			$plugin_ver  = $plugin_data['Version'];
 			return $plugin_ver;
+		}
+
+		/*
+     * 在 wp_admin 中使用do_shortcode
+     */
+		public static function admin_do_shortcode($content, $ignore_html = false): mixed
+		{
+			global $shortcode_tags;
+
+			if (false === strpos($content, '[')) {
+				return $content;
+			}
+
+			if (empty($shortcode_tags) || !is_array($shortcode_tags)) {
+				return $content;
+			}
+
+			// Find all registered tag names in $content.
+			preg_match_all('@\[([^<>&/\[\]\x00-\x20=]++)@', $content, $matches);
+			$tagnames = array_intersect(array_keys($shortcode_tags), $matches[1]);
+
+			if (empty($tagnames)) {
+				return $content;
+			}
+
+			$content = do_shortcodes_in_html_tags($content, $ignore_html, $tagnames);
+
+			$pattern = get_shortcode_regex($tagnames);
+			$content = preg_replace_callback("/$pattern/", 'do_shortcode_tag', $content);
+
+			// Always restore square braces so we don't break things like <!--[if IE ]>.
+			$content = unescape_invalid_shortcodes($content);
+
+			return $content;
 		}
 	}
 }
