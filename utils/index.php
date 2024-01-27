@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace J7\WpToolkit;
 
+require_once 'functions.php';
+
 if (!\class_exists('J7\WpToolkit\Utils', false)) {
 
-
-
-	abstract class Utils
+	class Utils
 	{
 		const APP_NAME            = 'WP Toolkit';
 		const KEBAB               = 'wp-toolkit';
@@ -16,10 +16,17 @@ if (!\class_exists('J7\WpToolkit\Utils', false)) {
 		const DEFAULT_IMAGE       = 'http://1.gravatar.com/avatar/1c39955b5fe5ae1bf51a77642f052848?s=96&d=mm&r=g';
 		const GITHUB_REPO         = 'https://github.com/j7-dev/wp-toolkit';
 
+		public static function is_dev(): bool
+		{
+			$pattern = '/^.+\.local$/i'; // 是否是本地開發
+			return (bool) preg_match($pattern, $_SERVER['HTTP_HOST']) || WP_DEBUG;
+		}
+		/**
+		 * @deprecated 即將淘汰，請改用 is_dev()
+		 */
 		public static function get_dev_mode(): bool
 		{
-			return false;
-			return $_SERVER['HTTP_HOST'] === 'test.local';
+			return self::is_dev();
 		}
 
 		public static function debug_log($log_line): void

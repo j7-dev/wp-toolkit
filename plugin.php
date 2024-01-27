@@ -45,7 +45,7 @@ if (!\class_exists('J7\WpToolkit\Plugin', false)) {
 			\register_activation_hook(__FILE__, [$this, 'activate']);
 			\register_deactivation_hook(__FILE__, [$this, 'deactivate']);
 
-			if (!Utils::get_dev_mode()) {
+			if (!Utils::is_dev()) {
 				\add_action('current_screen', [$this, 'remove_redux_banner'], 100);
 				\add_action('admin_menu', [$this, 'remove_redux_submenu'], 100);
 			}
