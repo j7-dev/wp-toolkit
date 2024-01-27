@@ -18,8 +18,7 @@ if (!\class_exists('J7\WpToolkit\Utils', false)) {
 
 		public static function is_dev(): bool
 		{
-			$pattern = '/^.+\.local$/i'; // 是否是本地開發
-			return (bool) preg_match($pattern, $_SERVER['HTTP_HOST']) || WP_DEBUG;
+			return WP_DEBUG;
 		}
 		/**
 		 * @deprecated 即將淘汰，請改用 is_dev()

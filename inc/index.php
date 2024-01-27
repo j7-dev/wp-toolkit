@@ -16,12 +16,19 @@ final class Bootstrap
 		require_once __DIR__ . '/ajax.php';
 
 
-
+		// if in dev mode, add tailwindcss to admin and frontend
 		if (Utils::is_dev()) {
 			\add_action('wp_enqueue_scripts', [$this, 'add_static_assets']);
 			\add_action('wp_head', [$this, 'add_tailwind_config'], 1000);
+			\add_filter('body_class', function ($classes) {
+				return array_merge($classes, array('tailwindcss'));
+			});
 			\add_action('admin_enqueue_scripts', [$this, 'add_static_assets']);
 			\add_action('admin_head', [$this, 'add_tailwind_config'], 1000);
+			\add_filter('admin_body_class', function ($classes) {
+				$classes .= ' tailwindcss ';
+				return $classes;
+			});
 		}
 	}
 
