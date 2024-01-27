@@ -9,11 +9,10 @@ use J7\WpToolkit\Utils;
 class Api
 {
 	const POSTMETA_API_ENDPOINT = 'postmeta';
-	const AJAX_NONCE_ENDPOINT   = 'ajaxnonce';
 
 	function __construct()
 	{
-		foreach ([self::POSTMETA_API_ENDPOINT, self::AJAX_NONCE_ENDPOINT] as $action) {
+		foreach ([self::POSTMETA_API_ENDPOINT] as $action) {
 			\add_action('rest_api_init', [$this, "register_{$action}_api"]);
 		}
 	}
@@ -41,23 +40,7 @@ class Api
 	public function register_postmeta_api()
 	{
 		$endpoint = self::POSTMETA_API_ENDPOINT;
-		\register_rest_route('wrp', "{$endpoint}/(?P<id>\d+)", array(
-			'methods'  => 'GET',
-			'callback' => [$this, "{$endpoint}_callback"],
-		));
-	}
-
-	public function ajaxnonce_callback()
-	{
-		$ajaxNonce = \wp_create_nonce(Utils::KEBAB);
-
-		return \rest_ensure_response($ajaxNonce);
-	}
-
-	public function register_ajaxnonce_api()
-	{
-		$endpoint = self::AJAX_NONCE_ENDPOINT;
-		\register_rest_route('wrp', "{$endpoint}", array(
+		\register_rest_route(Utils::KEBAB, "{$endpoint}/(?P<id>\d+)", array(
 			'methods'  => 'GET',
 			'callback' => [$this, "{$endpoint}_callback"],
 		));
