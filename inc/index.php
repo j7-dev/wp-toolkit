@@ -21,12 +21,17 @@ final class Bootstrap
 			\add_action('wp_enqueue_scripts', [$this, 'add_static_assets']);
 			\add_action('wp_head', [$this, 'add_tailwind_config'], 1000);
 			\add_filter('body_class', function ($classes) {
-				return array_merge($classes, array('tailwindcss'));
+				if (in_array('tailwindcss', $classes) === false) {
+					$classes[] = 'tailwindcss';
+				}
+				return $classes;
 			});
 			\add_action('admin_enqueue_scripts', [$this, 'add_static_assets']);
 			\add_action('admin_head', [$this, 'add_tailwind_config'], 1000);
 			\add_filter('admin_body_class', function ($classes) {
-				$classes .= ' tailwindcss ';
+				if (strpos($classes, 'tailwindcss') === false) {
+					$classes .= ' tailwindcss ';
+				}
 				return $classes;
 			});
 		}
@@ -39,9 +44,11 @@ final class Bootstrap
 
 	public function add_tailwind_config(): void
 	{
+		// WP 後台會與 tailwind css 衝突，所以要加上 prefix
 ?>
 		<script>
 			tailwind.config = {
+				prefix: 'tw-',
 				important: '.tailwindcss',
 				corePlugins: {
 					preflight: false,
