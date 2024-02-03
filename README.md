@@ -21,19 +21,19 @@
 
 <br><br>
 
-##### 1. 複製範例檔案
+#### 1. 複製範例檔案
 
-複製 `\inc\redux_custom_fields\number` 這個檔案，比如說 `\inc\redux_custom_fields\my_field`
+複製 `\inc\redux_custom_fields\example` 這個檔案，比如說 `\inc\redux_custom_fields\my_field`
 
 <br><br>
 
-##### 2. 將檔案內的 `number` 改成 `my_field` ， `Number` 改成 `My_Field` ， 資料夾名稱、檔名也都要改
+#### 2. 將檔案內的 `example` 改成 `my_field` ， `Example` 改成 `My_Field` ， 資料夾名稱、檔名也都要改
 
 因為 REDUX 是會解析檔名的，所以檔名也要跟著改
 
 <br><br>
 
-##### 3. 在 `\inc\index.php` 的 `load_extensions` 載入你的欄位
+#### 3. 在 `\inc\index.php` 的 `load_extensions` 載入你的欄位
 
 REDUX 會自動解析並載入 `set_extensions` 的路徑參數，所以不需要自己 include
 
@@ -47,5 +47,10 @@ REDUX 會自動解析並載入 `set_extensions` 的路徑參數，所以不需�
 	}
 ```
 
+<br><br><br>
 
+## 已經有的欄位
 
+現有欄位可以參考 [REDUX 官網](https://devs.redux.io/core-fields/)
+
+- number

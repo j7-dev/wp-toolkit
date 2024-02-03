@@ -56,6 +56,8 @@ final class Bootstrap
 		 * 如果是檔名
 		 * 會把 檔名 用 extension_ 分割，然後找對應的檔案來實例化，詳細可以看 \Redux::set_extensions 的代碼
 		 */
+		// \Redux::set_extensions($opt_name, Utils::get_plugin_dir() . '/inc/redux_custom_fields/example');
+
 		\Redux::set_extensions($opt_name, Utils::get_plugin_dir() . '/inc/redux_custom_fields/number');
 	}
 
