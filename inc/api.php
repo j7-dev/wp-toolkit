@@ -43,6 +43,7 @@ class Api
 		\register_rest_route(Utils::KEBAB, "{$endpoint}/(?P<id>\d+)", array(
 			'methods'  => 'GET',
 			'callback' => [$this, "{$endpoint}_callback"],
+			'permission_callback' => '__return_true'
 		));
 	}
 }
