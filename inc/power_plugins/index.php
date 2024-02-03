@@ -23,15 +23,25 @@ abstract class PowerPlugins
 
 	public function instance(): void
 	{
-		\Redux::set_args(self::OPT_NAME, wp_parse_args(
-			$this->args,
-			$this->get_default_args()
-		));
-		\Redux::set_sections(self::OPT_NAME, [
-			$this->get_default_section(),
-			...$this->sections,
-		]);
-		\Redux::init(self::OPT_NAME);
+		$instance = \Redux::instance(self::OPT_NAME);
+
+		// 如果已經實例化過，就不再實例化
+		if (empty($instance->args)) {
+			\Redux::set_args(self::OPT_NAME, wp_parse_args(
+				$this->args,
+				$this->get_default_args()
+			));
+			\Redux::set_sections(self::OPT_NAME, [
+				$this->get_default_section(),
+				...$this->sections,
+			]);
+			\Redux::init(self::OPT_NAME);
+
+
+			if (!WP_DEBUG) {
+				\Redux::remove_demo();
+			}
+		}
 	}
 
 	private function get_default_args(): array
