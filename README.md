@@ -47,6 +47,16 @@ REDUX 會自動解析並載入 `set_extensions` 的路徑參數，所以不需�
 	}
 ```
 
+#### 4. 使用 TailwindCSS 來開發
+
+如果你的 `WP_DEBUG` 為 `true`，那麼整個 wp-toolkit 會引入 tailwind CDN ，只需要加上前綴 `tw-` 就可以使用 tailwind 的 class
+
+> 如果不使用前綴， tailwind 會與 WordPress 後台的 CSS 衝突
+
+在此套件根目錄使用以下指令來打包 tailwind CSS
+
+`npx tailwindcss -i ./inc/redux_custom_fields/bundle.css -o ./inc/redux_custom_fields/bundle-min.css --minify`
+
 <br><br><br>
 
 ## 已經有的欄位
@@ -54,3 +64,4 @@ REDUX 會自動解析並載入 `set_extensions` 的路徑參數，所以不需�
 現有欄位可以參考 [REDUX 官網](https://devs.redux.io/core-fields/)
 
 - [number](https://github.com/j7-dev/wp-toolkit/tree/master/inc/redux_custom_fields/number)
+

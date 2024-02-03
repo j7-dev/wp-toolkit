@@ -18,25 +18,23 @@ final class Bootstrap
 
 		\add_action('redux/construct', [$this, 'load_extensions']);
 
-		// if in dev mode, add tailwindcss to admin and frontend
-		if (Utils::is_dev()) {
-			\add_action('wp_enqueue_scripts', [$this, 'add_static_assets']);
-			\add_action('wp_head', [$this, 'add_tailwind_config'], 1000);
-			\add_filter('body_class', function ($classes) {
-				if (in_array('tailwindcss', $classes) === false) {
-					$classes[] = 'tailwindcss';
-				}
-				return $classes;
-			});
-			\add_action('admin_enqueue_scripts', [$this, 'add_static_assets']);
-			\add_action('admin_head', [$this, 'add_tailwind_config'], 1000);
-			\add_filter('admin_body_class', function ($classes) {
-				if (strpos($classes, 'tailwindcss') === false) {
-					$classes .= ' tailwindcss ';
-				}
-				return $classes;
-			});
-		}
+
+		// \add_action('wp_enqueue_scripts', [$this, 'add_static_assets']);
+		// \add_action('wp_head', [$this, 'add_tailwind_config'], 1000);
+		// \add_filter('body_class', function ($classes) {
+		// 	if (in_array('tailwindcss', $classes) === false) {
+		// 		$classes[] = 'tailwindcss';
+		// 	}
+		// 	return $classes;
+		// });
+		\add_action('admin_enqueue_scripts', [$this, 'add_static_assets']);
+		\add_action('admin_head', [$this, 'add_tailwind_config'], 1000);
+		\add_filter('admin_body_class', function ($classes) {
+			if (strpos($classes, 'tailwindcss') === false) {
+				$classes .= ' tailwindcss ';
+			}
+			return $classes;
+		});
 	}
 
 	public function load_extensions($redux_object): void
@@ -63,11 +61,16 @@ final class Bootstrap
 
 	public function add_static_assets($hook): void
 	{
-		\wp_enqueue_script('tailwindcss', 'https://cdn.tailwindcss.com', array(), '3.4.0');
+		if (!WP_DEBUG) {
+			\wp_enqueue_style('tailwindcss', Utils::get_plugin_url() . '/inc/redux_custom_fields/bundle-min.css', array(), Utils::get_plugin_ver());
+		} else {
+			\wp_enqueue_script('tailwindcss', 'https://cdn.tailwindcss.com', array(), '3.4.0');
+		}
 	}
 
 	public function add_tailwind_config(): void
 	{
+		if (!WP_DEBUG) return;
 		// WP 後台會與 tailwind css 衝突，所以要加上 prefix
 ?>
 		<script>

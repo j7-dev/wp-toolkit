@@ -16,18 +16,6 @@ if (!\class_exists('J7\WpToolkit\Utils', false)) {
 		const DEFAULT_IMAGE       = 'http://1.gravatar.com/avatar/1c39955b5fe5ae1bf51a77642f052848?s=96&d=mm&r=g';
 		const GITHUB_REPO         = 'https://github.com/j7-dev/wp-toolkit';
 
-		public static function is_dev(): bool
-		{
-			return WP_DEBUG;
-		}
-		/**
-		 * @deprecated 即將淘汰，請改用 is_dev()
-		 */
-		public static function get_dev_mode(): bool
-		{
-			return self::is_dev();
-		}
-
 		public static function debug_log($log_line): void
 		{
 			$default_path = ABSPATH . 'wp-content';
