@@ -23,9 +23,95 @@ if (!class_exists('Redux_Number', false)) {
 		 */
 		public function render()
 		{
-?>
-			<input class="regular-text" type="number" />
-<?php
+			if (!empty($this->field['data']) && empty($this->field['options'])) {
+				if (empty($this->field['args'])) {
+					$this->field['args'] = array();
+				}
+
+				$this->field['options'] = $this->parent->wordpress_data->get($this->field['data'], $this->field['args'], $this->parent->args['opt_name'], $this->value);
+				$this->field['class']  .= ' hasOptions ';
+			}
+
+			if (empty($this->value) && !empty($this->field['data']) && !empty($this->field['options'])) {
+				$this->value = $this->field['options'];
+			}
+
+			$qtip_title = isset($this->field['text_hint']['title']) ? 'qtip-title="' . esc_attr($this->field['text_hint']['title']) . '" ' : '';
+			$qtip_text  = isset($this->field['text_hint']['content']) ? 'qtip-content="' . esc_attr($this->field['text_hint']['content']) . '" ' : '';
+
+			$readonly     = (isset($this->field['readonly']) && $this->field['readonly']) ? ' readonly="readonly"' : '';
+			$autocomplete = (isset($this->field['autocomplete']) && false === $this->field['autocomplete']) ? ' autocomplete="off"' : '';
+
+			ob_start();
+			print_r($this->field);
+			\J7\WpToolkit\Utils::debug_log('' . ob_get_clean());
+
+			// 這個 options 還不確定是幹嘛的  先保留
+			if (isset($this->field['options']) && !empty($this->field['options'])) {
+				$placeholder = '';
+
+				if (isset($this->field['placeholder'])) {
+					$placeholder = $this->field['placeholder'];
+				}
+
+				foreach ($this->field['options'] as $k => $v) {
+					if (!empty($placeholder)) {
+						$placeholder = (is_array($this->field['placeholder']) && isset($this->field['placeholder'][$k])) ? ' placeholder="' . esc_attr($this->field['placeholder'][$k]) . '" ' : '';
+					}
+
+					echo '<div class="input_wrapper">';
+					echo '<label for="' . esc_attr($this->field['id'] . '-text-' . $k) . '">' . esc_html($v) . '</label> ';
+
+					$value = $this->value[$k] ?? '';
+					$value = !empty($this->value[$k]) ? $this->value[$k] : '';
+
+					// phpcs:ignore WordPress.Security.EscapeOutput
+					echo '<input type="number" id="' . esc_attr($this->field['id'] . '-number-' . $k) . '" ' . esc_attr($qtip_title) . esc_attr($qtip_text) . ' name="' . esc_attr($this->field['name'] . $this->field['name_suffix'] . '[' . esc_attr($k)) . ']" ' . $placeholder . ' value="' . esc_attr($value) . '" class="regular-text ' . esc_attr($this->field['class']) . '" ' . esc_html($readonly) . esc_html($autocomplete) . '/><br />';
+					echo '</div>';
+				}
+			} else {
+
+				$min = isset($this->field['attributes']['min']) ? ' min="' . esc_attr($this->field['attributes']['min']) . '" ' : '';
+				$max = isset($this->field['attributes']['max']) ? ' max="' . esc_attr($this->field['attributes']['max']) . '" ' : '';
+				$step = isset($this->field['attributes']['step']) ? ' step="' . esc_attr($this->field['attributes']['step']) . '" ' : '';
+
+				$has_addon_before = isset($this->field['attributes']['addon_before']);
+				$addon_before = $has_addon_before ? '<span class="tw-bg-gray-100 tw-rounded-l-md tw-flex tw-place-items-center tw-px-2 tw-border-solid tw-border-[1px] tw-border-[#8c8f94]">' . $this->field['attributes']['addon_before'] . '</span>' : '';
+				$has_addon_after = isset($this->field['attributes']['addon_after']);
+				$addon_after = $has_addon_after ? '<span class="tw-bg-gray-100 tw-rounded-r-md tw-flex tw-place-items-center tw-px-2 tw-border-solid tw-border-[1px] tw-border-[#8c8f94]">' . $this->field['attributes']['addon_after'] . '</span>' : '';
+
+				$addon_class = '';
+				$addon_class .= $has_addon_before ? ' tw-rounded-l-none tw-ml-0 tw-border-l-0 ' : '';
+				$addon_class .= $has_addon_after ? ' tw-rounded-r-none tw-mr-0 tw-border-r-0 ' : '';
+
+
+				// phpcs:ignore WordPress.Security.EscapeOutput
+				echo "<div class='tw-flex regular-text'>";
+				echo $addon_before;
+				echo sprintf(
+					'<input
+				type="number"
+				%2s
+				%3s
+				id="%4s"
+				name="%5s"
+				placeholder="%5s"
+				value="%6s"
+				class="tw-flex-1 %7s"
+				%8s
+				/>',
+					$qtip_title,
+					$qtip_text,
+					esc_attr($this->field['id']),
+					esc_attr($this->field['name'] . $this->field['name_suffix']),
+					esc_attr($this->field['placeholder']),
+					esc_attr($this->value),
+					esc_attr($this->field['class']) . $addon_class,
+					esc_html($readonly) . esc_html($autocomplete) . $min . $max . $step
+				);
+				echo $addon_after;
+				echo "</div>";
+			}
 		}
 
 		/**
