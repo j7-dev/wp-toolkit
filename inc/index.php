@@ -10,7 +10,7 @@ final class Bootstrap
 {
 	function __construct()
 	{
-
+		require_once __DIR__ . '/power_plugins/index.php';
 		require_once __DIR__ . '/components/index.php';
 		require_once __DIR__ . '/api.php';
 		require_once __DIR__ . '/ajax.php';

@@ -42,10 +42,6 @@ if (!class_exists('Redux_Number', false)) {
 			$readonly     = (isset($this->field['readonly']) && $this->field['readonly']) ? ' readonly="readonly"' : '';
 			$autocomplete = (isset($this->field['autocomplete']) && false === $this->field['autocomplete']) ? ' autocomplete="off"' : '';
 
-			ob_start();
-			print_r($this->field);
-			\J7\WpToolkit\Utils::debug_log('' . ob_get_clean());
-
 			// 這個 options 還不確定是幹嘛的  先保留
 			if (isset($this->field['options']) && !empty($this->field['options'])) {
 				$placeholder = '';
@@ -84,7 +80,6 @@ if (!class_exists('Redux_Number', false)) {
 				$addon_class .= $has_addon_before ? ' tw-rounded-l-none tw-ml-0 tw-border-l-0 ' : '';
 				$addon_class .= $has_addon_after ? ' tw-rounded-r-none tw-mr-0 tw-border-r-0 ' : '';
 
-
 				// phpcs:ignore WordPress.Security.EscapeOutput
 				echo "<div class='tw-flex regular-text'>";
 				echo $addon_before;
@@ -95,18 +90,18 @@ if (!class_exists('Redux_Number', false)) {
 				%3s
 				id="%4s"
 				name="%5s"
-				placeholder="%5s"
-				value="%6s"
-				class="tw-flex-1 %7s"
+				%5s
+				%6s
+				%7s
 				%8s
 				/>',
 					$qtip_title,
 					$qtip_text,
 					esc_attr($this->field['id']),
 					esc_attr($this->field['name'] . $this->field['name_suffix']),
-					esc_attr($this->field['placeholder']),
-					esc_attr($this->value),
-					esc_attr($this->field['class']) . $addon_class,
+					"placeholder='" . esc_attr($this->field['placeholder']) . "'",
+					"value='" . esc_attr($this->value) . "'",
+					"class='tw-flex-1 " . esc_attr($this->field['class']) . $addon_class . "'",
 					esc_html($readonly) . esc_html($autocomplete) . $min . $max . $step
 				);
 				echo $addon_after;

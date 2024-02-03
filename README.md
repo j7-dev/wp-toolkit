@@ -47,6 +47,8 @@ REDUX 會自動解析並載入 `set_extensions` 的路徑參數，所以不需�
 	}
 ```
 
+<br><br>
+
 #### 4. 使用 TailwindCSS 來開發
 
 如果你的 `WP_DEBUG` 為 `true`，那麼整個 wp-toolkit 會引入 tailwind CDN ，只需要加上前綴 `tw-` 就可以使用 tailwind 的 class

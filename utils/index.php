@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace J7\WpToolkit;
 
-require_once 'functions.php';
+require_once __DIR__ . '/functions.php';
 
 if (!\class_exists('J7\WpToolkit\Utils', false)) {
 
@@ -13,6 +13,7 @@ if (!\class_exists('J7\WpToolkit\Utils', false)) {
 		const APP_NAME            = 'WP Toolkit';
 		const KEBAB               = 'wp-toolkit';
 		const SNAKE               = 'wp_toolkit';
+		const TEXT_DOMAIN 			  = Utils::SNAKE;
 		const DEFAULT_IMAGE       = 'http://1.gravatar.com/avatar/1c39955b5fe5ae1bf51a77642f052848?s=96&d=mm&r=g';
 		const GITHUB_REPO         = 'https://github.com/j7-dev/wp-toolkit';
 
