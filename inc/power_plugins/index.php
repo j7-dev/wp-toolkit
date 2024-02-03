@@ -18,7 +18,7 @@ abstract class PowerPlugins
 
 	public function __construct()
 	{
-		\add_action('plugins_loaded', [$this, 'instance'], 100);
+		\add_action('setup_theme', [$this, 'instance'], 100);
 	}
 
 	public function instance(): void
