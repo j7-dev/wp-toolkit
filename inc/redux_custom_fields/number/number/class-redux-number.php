@@ -99,7 +99,7 @@ if (!class_exists('Redux_Number', false)) {
 					$qtip_text,
 					esc_attr($this->field['id']),
 					esc_attr($this->field['name'] . $this->field['name_suffix']),
-					"placeholder='" . esc_attr($this->field['placeholder']) . "'",
+					"placeholder='" . esc_attr($this->field['placeholder'] ?? '') . "'",
 					"value='" . esc_attr($this->value) . "'",
 					"class='tw-flex-1 " . esc_attr($this->field['class']) . $addon_class . "'",
 					esc_html($readonly) . esc_html($autocomplete) . $min . $max . $step
