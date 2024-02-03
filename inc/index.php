@@ -16,6 +16,8 @@ final class Bootstrap
 		require_once __DIR__ . '/ajax.php';
 
 
+		\add_action('redux/construct', [$this, 'load_extensions']);
+
 		// if in dev mode, add tailwindcss to admin and frontend
 		if (Utils::is_dev()) {
 			\add_action('wp_enqueue_scripts', [$this, 'add_static_assets']);
@@ -35,6 +37,26 @@ final class Bootstrap
 				return $classes;
 			});
 		}
+	}
+
+	public function load_extensions($redux_object): void
+	{
+		$opt_name = $redux_object->args['opt_name'];
+
+		/**
+		 *
+		 * 不需要 require php ，用 Redux::set_extensions 直接設定路徑就可以
+		 *
+		 * 關於 \Redux::set_extensions
+		 * @param opt_name string
+		 * @param path string - 可以是 目錄路徑 或 檔案路徑，但是檔名有規範，他會分割檔名
+		 * 如果是目錄，會找目錄下
+		 * 'extension_' . $folder . '.php',
+		 * 'class-redux-extension-' . $folder_fix . '.php',
+		 * 如果是檔名
+		 * 會把 檔名 用 extension_ 分割，然後找對應的檔案來實例化，詳細可以看 \Redux::set_extensions 的代碼
+		 */
+		\Redux::set_extensions($opt_name, Utils::get_plugin_dir() . '/inc/redux_custom_fields/number');
 	}
 
 	public function add_static_assets($hook): void
