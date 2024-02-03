@@ -53,4 +53,4 @@ REDUX 會自動解析並載入 `set_extensions` 的路徑參數，所以不需�
 
 現有欄位可以參考 [REDUX 官網](https://devs.redux.io/core-fields/)
 
-- number
+- [number](https://github.com/j7-dev/wp-toolkit/tree/master/inc/redux_custom_fields/number)
