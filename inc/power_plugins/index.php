@@ -248,10 +248,9 @@ class PowerPlugins
 
     public static function get_instance(): PowerPlugins
     {
-        if (self::$instance) {
-            return self::$instance;
+        if (empty(self::$instance)) {
+            self::$instance = new self();
         }
-        self::$instance = new self();
         return self::$instance;
     }
 
