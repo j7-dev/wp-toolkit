@@ -4,7 +4,7 @@
  * Plugin Name:       WP Toolkit
  * Plugin URI:        https://cloud.luke.cafe/plugins/
  * Description:       方便開發 WordPress 外掛的工具包。
- * Version:           0.3.1
+ * Version:           0.3.2
  * Requires at least: 5.7
  * Requires PHP:      7.4
  * Author:            J7
