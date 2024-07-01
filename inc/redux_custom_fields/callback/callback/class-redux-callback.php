@@ -24,13 +24,11 @@ if ( ! class_exists( 'Redux_Callback', false ) ) {
 		 */
 		public function render(): void {
 			$callback = $this->field['callback'] ?? '';
-			$args     = $this->field['args'] ?? [];
 
 			if ( ! is_callable( $callback ) ) {
 				throw new Exception( 'Callback field must have a valid callback function' );
 			}
-
-			call_user_func( $callback, $args );
+			call_user_func( $callback, $this->field );
 		}
 	}
 }
