@@ -3,7 +3,7 @@
  * Plugin Name:       WP Toolkit
  * Plugin URI:        https://github.com/j7-dev/wp-toolkit
  * Description:       方便開發 WordPress 外掛的工具包。
- * Version:           1.0.2
+ * Version:           1.0.3
  * Requires at least: 5.7
  * Requires PHP:      8.0
  * Author:            J7
