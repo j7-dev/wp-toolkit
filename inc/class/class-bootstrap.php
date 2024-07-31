@@ -17,7 +17,7 @@ final class Bootstrap {
 	 * Constructor
 	 */
 	public function __construct() {
-		\add_action( 'admin_menu', [ __CLASS__ , 'add_power_plugin_menu' ] );
+		\add_action( 'admin_menu', [ __CLASS__ , 'add_power_plugin_menu' ], 10 );
 	}
 
 	/**
@@ -33,6 +33,8 @@ final class Bootstrap {
 			'dashicons-superhero',
 			70
 		);
+
+		\add_submenu_page( 'power_plugins_settings', __( '其他', 'wp_toolkit' ), __( '其他', 'wp_toolkit' ), 'manage_options', 'power_plugins_settings', [ __CLASS__, 'power_plugins_page_callback' ], 1000 );
 	}
 
 	/**
