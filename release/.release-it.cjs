@@ -31,7 +31,7 @@ module.exports = {
 		// 'before:init': [], // run before initialization
 		// 'after:[my-plugin]:bump': './bin/my-script.sh', // run after bumping version of my-plugin
 		'after:bump': [
-			'yarn build && echo ✅ build success',
+			// 'yarn build && echo ✅ build success',
 			release
 				? 'yarn sync:version && echo ✅ sync version success'
 				: 'echo 🚫 skip sync version',

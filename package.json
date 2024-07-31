@@ -1,6 +1,6 @@
 {
 	"name": "wp-toolkit",
-	"version": "1.0.0",
+	"version": "1.0.1",
 	"type": "module",
 	"scripts": {
 		"bootstrap": "npm install && composer install --no-interaction",
